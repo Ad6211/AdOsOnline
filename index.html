@@ -2,116 +2,53 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Pseudo OS</title>
+<title>Pseudo OS avec Utilisateurs</title>
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background: #2e2e2e;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        overflow: hidden;
-    }
-    /* Bureau */
-    #desktop {
-        width: 100%;
-        height: calc(100% - 40px);
-        position: relative;
-        background: linear-gradient(135deg,#3b3b3b,#1e1e1e);
-        overflow: hidden;
-    }
-    .icon {
-        width: 80px;
-        text-align: center;
-        color: white;
-        cursor: pointer;
-        position: absolute;
-    }
-    .icon img {
-        width: 64px;
-        height: 64px;
-    }
-    /* Barre des tâches */
-    #taskbar {
-        height: 40px;
-        width: 100%;
-        background: #1a1a1a;
-        color: white;
-        position: absolute;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-    }
-    #start-btn {
-        width: 80px;
-        height: 100%;
-        background: #0078d7;
-        text-align: center;
-        line-height: 40px;
-        cursor: pointer;
-        user-select: none;
-    }
-    #start-menu {
-        position: absolute;
-        bottom: 40px;
-        left: 0;
-        width: 200px;
-        background: #2b2b2b;
-        color: white;
-        display: none;
-        flex-direction: column;
-        border: 1px solid #000;
-    }
-    #start-menu div {
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: 1px solid #444;
-    }
-    #start-menu div:hover {
-        background: #444;
-    }
-    /* Fenêtre */
-    .window {
-        width: 300px;
-        height: 200px;
-        background: #f0f0f0;
-        color: black;
-        border: 2px solid #333;
-        position: absolute;
-        top: 50px;
-        left: 50px;
-        display: none;
-        flex-direction: column;
-        z-index: 10;
-    }
-    .window-header {
-        background: #0078d7;
-        color: white;
-        padding: 5px;
-        cursor: move;
-        user-select: none;
-        display: flex;
-        justify-content: space-between;
-    }
-    .window-content {
-        flex: 1;
-        padding: 10px;
-        overflow: auto;
-    }
-    .close-btn {
-        cursor: pointer;
-    }
-    button {
-        cursor: pointer;
-    }
-    input, textarea {
-        width: 100%;
-        box-sizing: border-box;
-    }
+html, body {
+    margin:0; padding:0; width:100%; height:100%;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow:hidden;
+}
+#loginScreen, #desktop { width:100%; height:100%; position:absolute; top:0; left:0; }
+#loginScreen { display:flex; align-items:center; justify-content:center; background:#1a1a1a; color:white; flex-direction:column; }
+#loginScreen input { padding:10px; margin:5px; width:200px; }
+#desktop { display:none; background:#2e2e2e; position:relative; overflow:hidden; }
+
+/* Animated background */
+@keyframes bgAnim { 0%{background-position:0 0}50%{background-position:100% 100%}100%{background-position:0 0} }
+#desktop { background: linear-gradient(135deg,#3b3b3b,#1e1e1e); background-size:400% 400%; animation:bgAnim 20s linear infinite; }
+
+/* Icons */
+.icon { width:80px; text-align:center; color:white; cursor:pointer; position:absolute; }
+.icon img { width:64px; height:64px; }
+
+/* Taskbar */
+#taskbar { height:40px; width:100%; background:#1a1a1a; color:white; position:absolute; bottom:0; display:flex; align-items:center; }
+#start-btn { width:80px; height:100%; background:#0078d7; text-align:center; line-height:40px; cursor:pointer; user-select:none; }
+#start-menu { position:absolute; bottom:40px; left:0; width:200px; background:#2b2b2b; color:white; display:none; flex-direction:column; border:1px solid #000; }
+#start-menu div { padding:10px; cursor:pointer; border-bottom:1px solid #444; }
+#start-menu div:hover { background:#444; }
+
+/* Windows */
+.window { width:300px; height:200px; background:#f0f0f0; color:black; border:2px solid #333; position:absolute; top:50px; left:50px; display:none; flex-direction:column; z-index:10; }
+.window-header { background:#0078d7; color:white; padding:5px; cursor:move; user-select:none; display:flex; justify-content:space-between; }
+.window-content { flex:1; padding:10px; overflow:auto; }
+.close-btn { cursor:pointer; }
+button { cursor:pointer; }
+input, textarea { width:100%; box-sizing:border-box; }
+
 </style>
 </head>
 <body>
+
+<!-- Login Screen -->
+<div id="loginScreen">
+    <h1>Connexion Pseudo OS</h1>
+    <input type="text" id="username" placeholder="Nom d'utilisateur">
+    <button onclick="login()">Se connecter</button>
+</div>
+
+<!-- Desktop -->
 <div id="desktop">
     <div class="icon" style="top:20px; left:20px;" onclick="openWindow('terminal')">
         <img src="https://img.icons8.com/ios-filled/64/ffffff/console.png"/>
@@ -127,6 +64,7 @@
     </div>
 </div>
 
+<!-- Taskbar -->
 <div id="taskbar">
     <div id="start-btn" onclick="toggleStartMenu()">Start</div>
 </div>
@@ -136,7 +74,7 @@
     <div onclick="openWindow('calculator')">Calculator</div>
 </div>
 
-<!-- Fenêtres -->
+<!-- Windows -->
 <div class="window" id="terminal">
     <div class="window-header">Terminal <span class="close-btn" onclick="closeWindow('terminal')">✖</span></div>
     <div class="window-content">
@@ -147,13 +85,8 @@
 
 <div class="window" id="explorer">
     <div class="window-header">Explorer <span class="close-btn" onclick="closeWindow('explorer')">✖</span></div>
-    <div class="window-content">
-        <ul>
-            <li>Documents</li>
-            <li>Images</li>
-            <li>Musique</li>
-            <li>Vidéo</li>
-        </ul>
+    <div class="window-content" id="explorer-content">
+        <ul></ul>
     </div>
 </div>
 
@@ -181,59 +114,109 @@
 </div>
 
 <script>
+let currentUser = null;
+
+// Login system
+function login(){
+    let user = document.getElementById('username').value.trim();
+    if(!user) return alert('Veuillez entrer un nom d’utilisateur');
+    currentUser = user;
+    // Crée un espace utilisateur virtuel si inexistant
+    if(!localStorage.getItem('user_'+user)){
+        localStorage.setItem('user_'+user, JSON.stringify({terminal:'', calc:'', files:[]}));
+    }
+    loadUser();
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('desktop').style.display='block';
+}
+
+// Charger les données utilisateur
+function loadUser(){
+    let data = JSON.parse(localStorage.getItem('user_'+currentUser));
+    document.getElementById('terminal-text').value = data.terminal;
+    document.getElementById('calc-display').value = data.calc;
+    updateExplorer();
+}
+
+// Sauvegarder automatiquement
+function saveUser(){
+    let data = {
+        terminal: document.getElementById('terminal-text').value,
+        calc: document.getElementById('calc-display').value,
+        files: JSON.parse(localStorage.getItem('user_'+currentUser)).files
+    };
+    localStorage.setItem('user_'+currentUser, JSON.stringify(data));
+}
+
+// Update explorer
+function updateExplorer(){
+    let ul = document.querySelector('#explorer-content ul');
+    ul.innerHTML='';
+    let files = JSON.parse(localStorage.getItem('user_'+currentUser)).files;
+    files.forEach(f=>{
+        let li = document.createElement('li');
+        li.textContent = f;
+        ul.appendChild(li);
+    });
+}
+
+// Start menu
 function toggleStartMenu(){
     let menu = document.getElementById('start-menu');
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
 }
 
-function openWindow(id){
-    let w = document.getElementById(id);
-    w.style.display = 'flex';
-    w.style.zIndex = 10;
-}
+// Windows control
+function openWindow(id){ let w=document.getElementById(id); w.style.display='flex'; w.style.zIndex=10; }
+function closeWindow(id){ document.getElementById(id).style.display='none'; }
 
-function closeWindow(id){
-    document.getElementById(id).style.display = 'none';
-}
-
-/* Terminal */
+// Terminal
 function handleTerminal(e){
-    if(e.key === 'Enter'){
+    if(e.key==='Enter'){
         let input = document.getElementById('terminal-input');
         let text = document.getElementById('terminal-text');
         text.value += '> ' + input.value + '\n';
-        if(input.value === 'help') text.value += 'Commandes: help, clear\n';
-        else if(input.value === 'clear') text.value = '';
+        let cmd = input.value.trim();
+        if(cmd==='help') text.value += 'Commandes: help, clear, touch [nom]\n';
+        else if(cmd==='clear') text.value='';
+        else if(cmd.startsWith('touch ')){
+            let file = cmd.split(' ')[1];
+            let data = JSON.parse(localStorage.getItem('user_'+currentUser));
+            data.files.push(file);
+            localStorage.setItem('user_'+currentUser, JSON.stringify(data));
+            updateExplorer();
+            text.value += 'Fichier créé: '+file+'\n';
+        }
         else text.value += 'Commande inconnue\n';
-        input.value = '';
-        text.scrollTop = text.scrollHeight;
+        input.value='';
+        text.scrollTop=text.scrollHeight;
+        saveUser();
     }
 }
 
-/* Calculator */
-let calcValue = '';
-function calcPress(val){ calcValue += val; document.getElementById('calc-display').value = calcValue;}
-function calcResult(){ try {calcValue = eval(calcValue).toString(); document.getElementById('calc-display').value = calcValue;} catch(e){document.getElementById('calc-display').value='Error'; calcValue='';}}
-function calcClear(){ calcValue=''; document.getElementById('calc-display').value='';}
+// Calculator
+let calcValue='';
+function calcPress(val){ calcValue+=val; document.getElementById('calc-display').value=calcValue; saveUser();}
+function calcResult(){ try{calcValue=eval(calcValue).toString(); document.getElementById('calc-display').value=calcValue; saveUser(); } catch(e){document.getElementById('calc-display').value='Error'; calcValue=''; saveUser();}}
+function calcClear(){ calcValue=''; document.getElementById('calc-display').value=''; saveUser();}
 
-/* Draggable windows */
-let dragged = null;
-let offsetX = 0;
-let offsetY = 0;
+// Draggable windows
+let dragged=null, offsetX=0, offsetY=0;
 document.querySelectorAll('.window-header').forEach(header=>{
     header.addEventListener('mousedown', function(e){
-        dragged = header.parentElement;
-        offsetX = e.clientX - dragged.offsetLeft;
-        offsetY = e.clientY - dragged.offsetTop;
+        dragged=header.parentElement;
+        offsetX=e.clientX-dragged.offsetLeft;
+        offsetY=e.clientY-dragged.offsetTop;
     });
 });
 document.addEventListener('mousemove', function(e){
     if(dragged){
-        dragged.style.left = (e.clientX - offsetX) + 'px';
-        dragged.style.top = (e.clientY - offsetY) + 'px';
+        dragged.style.left=(e.clientX-offsetX)+'px';
+        dragged.style.top=(e.clientY-offsetY)+'px';
     }
 });
 document.addEventListener('mouseup', ()=>{dragged=null;});
+
 </script>
 </body>
 </html>
